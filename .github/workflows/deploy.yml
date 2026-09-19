@@ -1,0 +1,72 @@
+# ---------------------------------------------------------------------------
+# Menerbitkan undangan ke GitHub Pages setiap kali ada push ke branch `main`.
+#
+# Kenapa perlu alur kerja ini: undangan ini aplikasi React, jadi berkasnya
+# harus di-build dulu menjadi HTML/CSS/JS biasa. Kalau GitHub Pages disuruh
+# menyajikan akar repo apa adanya, yang terbuka adalah `index.html` sumber
+# yang memuat `/src/main.jsx` — berkas JSX yang tidak bisa dijalankan browser.
+# Hasilnya halaman putih kosong.
+#
+# SEKALI SAJA, di setelan repo: Settings -> Pages -> Source, pilih
+# "GitHub Actions" (bukan "Deploy from a branch"). Tanpa itu, alur kerja ini
+# berjalan sampai selesai tapi hasilnya tidak pernah dipasang.
+# ---------------------------------------------------------------------------
+
+name: Deploy undangan ke GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  # Memungkinkan dijalankan manual dari tab Actions.
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Kalau ada beberapa push beruntun, biarkan yang terbaru saja yang dipasang.
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ambil kode
+        uses: actions/checkout@v4
+
+      - name: Siapkan Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+
+      # `npm ci` memakai package-lock.json apa adanya, jadi versi paket di
+      # sini persis sama dengan yang dipakai saat dikembangkan.
+      - name: Pasang dependensi
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+
+      - name: Siapkan Pages
+        uses: actions/configure-pages@v5
+
+      # Hanya isi dist/ yang diunggah — gambar sumber dan node_modules tidak.
+      - name: Unggah hasil build
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Pasang ke GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

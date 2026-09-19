@@ -47,12 +47,25 @@ export default function CoverScreen({ guestName, onOpen }) {
           bawah tanpa mengganti gambarnya, nanti sikunya menggantung. */}
       <div className="absolute inset-0">
         {[
-          { src: assets.floral.cornerC, corner: 'tl', width: 132, delay: 0.2 },
-          { src: assets.floral.cornerB, corner: 'tr', width: 140, delay: 0.42 },
-          { src: assets.floral.cornerE, corner: 'bl', width: 138, delay: 0.64 },
-          { src: assets.floral.cornerD, corner: 'br', width: 130, delay: 0.86 },
+          { src: assets.floral.cornerC, corner: 'tl', width: 168, delay: 0.25, sm: 'sm:w-64' },
+          { src: assets.floral.cornerB, corner: 'tr', width: 176, delay: 0.75, sm: 'sm:w-64' },
+          { src: assets.floral.cornerE, corner: 'bl', width: 172, delay: 1.25, sm: 'sm:w-64' },
+          { src: assets.floral.cornerD, corner: 'br', width: 164, delay: 1.75, sm: 'sm:w-64' },
+          // Aksen tengah tepi supaya sisi kiri dan kanan tidak terasa kosong.
+          { src: assets.floral.bouquet, corner: 'ml', width: 84, delay: 2.2, sm: 'sm:w-32', op: 0.6 },
+          { src: assets.floral.leaf, corner: 'mr', width: 68, delay: 2.5, sm: 'sm:w-24', op: 0.55 },
         ].map((c) => (
-          <FloralCorner key={c.corner} {...c} opacity={0.85} eager className="sm:w-48" />
+          <FloralCorner
+            key={c.corner}
+            src={c.src}
+            corner={c.corner}
+            width={c.width}
+            delay={c.delay}
+            opacity={c.op ?? 0.88}
+            eager
+            immediate
+            className={c.sm}
+          />
         ))}
       </div>
 
@@ -72,7 +85,7 @@ export default function CoverScreen({ guestName, onOpen }) {
         </motion.p>
 
         <motion.h1
-          className="mt-1 shrink-0 font-script text-5xl leading-[1.08] text-sky-800 sm:text-6xl"
+          className="mt-2 shrink-0 font-script text-5xl leading-[1.12] text-sky-800 sm:text-6xl"
           initial={{ opacity: 0, letterSpacing: '0.3em' }}
           animate={{ opacity: 1, letterSpacing: '0.02em' }}
           transition={{ delay: 0.75, duration: 1.2, ease: EASE }}
@@ -117,9 +130,17 @@ export default function CoverScreen({ guestName, onOpen }) {
               tenggelam di balik foto dan teksnya jadi tak terbaca di atas
               gaun pengantin. */}
           <div className="absolute inset-x-0 bottom-0 flex flex-col items-center pb-6">
+            {/* Kabut putih ini hanya perlu menutupi area di belakang sapaan
+                tamu. Dibuat melingkar (radial) supaya memudar ke samping —
+                versi selebar layar sebelumnya ikut memutihkan ornamen bunga
+                di sudut kiri-bawah dan kanan-bawah. */}
             <div
               aria-hidden="true"
-              className="pointer-events-none absolute inset-x-0 bottom-0 h-52 bg-gradient-to-t from-white via-white/90 to-transparent"
+              className="pointer-events-none absolute inset-x-0 bottom-0 h-52"
+              style={{
+                background:
+                  'radial-gradient(58% 100% at 50% 100%, rgba(255,255,255,0.96) 0%, rgba(255,255,255,0.82) 45%, rgba(255,255,255,0) 100%)',
+              }}
             />
 
             <motion.div

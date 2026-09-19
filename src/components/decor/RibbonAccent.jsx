@@ -94,6 +94,7 @@ export function FloralCorner({
   behind = false,
   delay = 0,
   eager = false,
+  immediate = false,
   className = '',
 }) {
   const place = {
@@ -101,15 +102,26 @@ export function FloralCorner({
     tr: 'right-0 top-0',
     bl: 'left-0 bottom-0',
     br: 'right-0 bottom-0',
+    // Aksen tengah tepi, untuk meramaikan sisi kiri dan kanan. Tidak memakai
+    // `-translate-y-1/2` karena kelas transform Tailwind selalu kalah oleh
+    // transform inline dari Framer Motion — posisinya diatur lewat `top` saja.
+    ml: 'left-0 top-[36%]',
+    mr: 'right-0 top-[40%]',
   }[corner]
 
   // Masuk dari tepi terdekat: yang di kiri bergeser dari kiri, yang di kanan
   // dari kanan — seolah rangkaiannya menjalar masuk ke dalam layar.
-  const dariKiri = corner === 'tl' || corner === 'bl'
+  const dariKiri = corner === 'tl' || corner === 'bl' || corner === 'ml'
 
   // Memakai hook yang sama dengan pembatas bunga. `whileInView` sempat tidak
   // pernah menyala untuk ornamen dekoratif seperti ini.
+  //
+  // `immediate` untuk ornamen yang sudah pasti terlihat begitu dirender —
+  // misalnya di cover, yang memenuhi layar dan tidak bisa di-scroll. Di sana
+  // menunggu deteksi viewport tidak ada gunanya dan hanya menambah risiko
+  // ornamennya tidak pernah muncul.
   const { ref, isInView } = useInViewAnimation()
+  const tampil = immediate || isInView
 
   return (
     <motion.img
@@ -126,8 +138,8 @@ export function FloralCorner({
       } ${className}`}
       ref={ref}
       initial={{ opacity: 0, x: dariKiri ? -48 : 48 }}
-      animate={isInView ? { opacity, x: 0 } : { opacity: 0, x: dariKiri ? -48 : 48 }}
-      transition={{ duration: 1.3, delay, ease: EASE }}
+      animate={tampil ? { opacity, x: 0 } : { opacity: 0, x: dariKiri ? -48 : 48 }}
+      transition={{ duration: 1.05, delay, ease: EASE }}
     />
   )
 }

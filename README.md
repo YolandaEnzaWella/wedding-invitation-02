@@ -198,15 +198,22 @@ masuk ke Anda, sambungkan ke Firestore:
 
 ## Deploy ke GitHub Pages
 
-`base` di [`vite.config.js`](vite.config.js) sudah disetel ke
+Sudah otomatis lewat
+[`.github/workflows/deploy.yml`](.github/workflows/deploy.yml): tiap push ke
+`main` akan mem-build dan menerbitkan isi `dist/`.
+
+**Satu langkah manual, sekali saja:** buka **Settings → Pages → Source** di
+repo ini, lalu pilih **"GitHub Actions"** (bukan "Deploy from a branch").
+
+> Kalau Source masih disetel ke branch, GitHub Pages menyajikan akar repo apa
+> adanya — yang terbuka adalah `index.html` **sumber**, yang memuat
+> `/src/main.jsx`. Berkas JSX itu tidak bisa dijalankan browser, jadi
+> halamannya tampil putih kosong. Undangan ini aplikasi React; ia harus
+> di-build dulu.
+
+`base` di [`vite.config.js`](vite.config.js) disetel ke
 `/wedding-invitation-02/`, sesuai nama repo ini. Kalau nanti dipasang di domain
 sendiri, ubah menjadi `'/'`.
-
-```bash
-npm run build
-```
-
-Lalu unggah isi `dist/` ke branch `gh-pages`, atau pakai GitHub Actions.
 
 ---
 
