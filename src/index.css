@@ -1,0 +1,90 @@
+@import 'tailwindcss';
+
+/* ===========================================================================
+   PALET & TIPOGRAFI
+   ---------------------------------------------------------------------------
+   Skala `sky-*` bawaan Tailwind sengaja ditimpa dengan biru langit yang jauh
+   lebih lembut sesuai blueprint. Jadi `bg-sky-200`, `text-sky-700`, dst. di
+   seluruh komponen otomatis memakai warna tema ini — tidak ada warna yang
+   ditulis mentah (hex) di dalam JSX.
+   =========================================================================== */
+@theme {
+  --color-sky-50: #f7fbfe;
+  --color-sky-100: #eef7fc;
+  --color-sky-200: #dcedf8;
+  --color-sky-300: #bfe1f0; /* biru langit lembut  */
+  --color-sky-400: #a9cde8; /* warna utama         */
+  --color-sky-500: #8fbcdd;
+  --color-sky-600: #7fafd1; /* biru dusty (aksen)  */
+  --color-sky-700: #5c87a8;
+  --color-sky-800: #4a7091;
+  --color-sky-900: #3c5a73; /* teks di atas putih  */
+
+  --color-pearl: #fdfcfa; /* putih hangat        */
+  --color-gilt: #c9b18a; /* pastel gold detail  */
+
+  --font-script: 'Great Vibes', cursive;
+  --font-serif: 'Cormorant Garamond', Georgia, serif;
+  --font-sans: 'Quicksand', ui-sans-serif, system-ui, sans-serif;
+
+  --shadow-soft: 0 10px 40px -12px rgb(92 135 168 / 0.25);
+  --shadow-lift: 0 18px 50px -14px rgb(92 135 168 / 0.38);
+}
+
+/* ===========================================================================
+   DASAR
+   =========================================================================== */
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    margin: 0;
+    background-color: var(--color-sky-50);
+    color: var(--color-sky-900);
+    font-family: var(--font-sans);
+    font-weight: 400;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  /* Dikunci oleh App saat cover masih tertutup. */
+  body.is-locked {
+    overflow: hidden;
+  }
+
+  /* Tamu yang mengaktifkan "kurangi gerak" di sistemnya tetap bisa membaca
+     undangan — semua animasi dipangkas, bukan sekadar dipercepat. */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+/* ===========================================================================
+   UTILITAS KECIL YANG DIPAKAI BERULANG
+   =========================================================================== */
+@utility text-eyebrow {
+  font-family: var(--font-sans);
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--color-sky-600);
+}
+
+@utility glass-card {
+  background-color: rgb(255 255 255 / 0.72);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgb(255 255 255 / 0.85);
+  box-shadow: var(--shadow-soft);
+}

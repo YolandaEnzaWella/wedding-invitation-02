@@ -1,0 +1,36 @@
+# Sistem
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editor
+.vscode/
+.idea/
+*.swp
+
+# Dependensi & hasil build
+node_modules/
+dist/
+dist-ssr/
+*.local
+
+# Log & sementara
+*.log
+npm-debug.log*
+.cache/
+tmp/
+
+# ---------------------------------------------------------------------------
+# Berkas gambar SUMBER (PNG/JPEG mentah dari ChatGPT, total ~52 MB).
+#
+# Yang disajikan ke tamu adalah hasil olahannya di public/img/ (~4,5 MB):
+#
+#     assets/img/*.png   --[ python tools/optimize-images.py ]-->   public/img/**/*.webp
+#
+# Sumbernya sengaja tidak ikut di-commit: tidak pernah diunduh tamu, tapi akan
+# terbawa di tiap deploy dan menggelembungkan riwayat repo selamanya.
+# SIMPAN SENDIRI cadangannya — bila hilang, hasil WebP tidak bisa dibuat ulang.
+# Hapus dua baris di bawah bila ingin sumbernya ikut tersimpan di GitHub.
+# ---------------------------------------------------------------------------
+assets/img/
+assets/audio/music.mp3
