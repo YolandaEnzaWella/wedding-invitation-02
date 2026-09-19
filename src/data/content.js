@@ -197,6 +197,10 @@ export const closing = {
   text:
     'Atas doa, restu, dan kehadiran Anda dalam perjalanan cinta kami. ' +
     'Sampai jumpa di hari bahagia!',
+  /** Kalimat manis di dasar halaman. Kosongkan ('') untuk menyembunyikannya. */
+  tagline: 'Made with love for a lifetime story',
+  /** Kredit pembuat undangan. */
+  credit: 'created by enza.id',
 }
 
 /* ---------------------------------------------------------------------------

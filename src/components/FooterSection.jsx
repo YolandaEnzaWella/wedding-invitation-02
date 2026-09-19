@@ -41,7 +41,10 @@ export default function FooterSection() {
 
   return (
     <>
-      <footer className="relative overflow-hidden px-6 pt-20 pb-40 text-center">
+      {/* Padding bawah disediakan lebih lega daripada tinggi rangkaian bunga
+          di dasar halaman, supaya tagline dan kredit duduk DI ATAS bunga,
+          bukan tenggelam di tengah-tengahnya. */}
+      <footer className="relative overflow-hidden px-6 pt-20 pb-52 text-center sm:pb-72">
         {/* Balkon berlatar laut sebagai penutup, memudar ke putih di atasnya. */}
         <img
           src={assets.bg.balcony}
@@ -98,30 +101,41 @@ export default function FooterSection() {
         </motion.div>
 
         {/* Rangkaian bunga di dasar halaman.
-            Lebarnya DIBATASI dan digambar di belakang (-z-10): tanpa itu, di
-            layar lebar bunganya ikut melebar sampai selebar layar — tingginya
-            jadi ratusan piksel dan menutupi tulisan "Terima Kasih". */}
+            Lebarnya tidak boleh melebihi layar (dulu `w-[130%]`, sehingga
+            bunganya terpotong di tepi kiri dan kanan), dan digambar di
+            belakang (-z-10) supaya tidak menutupi tulisan. Gambarnya
+            berbanding 2:1, jadi lebar 320 px berarti tinggi 160 px — itu yang
+            harus dilampaui oleh padding bawah footer. */}
         <motion.img
           src={assets.floral.swag}
           alt=""
           aria-hidden="true"
           loading="lazy"
-          className="pointer-events-none absolute inset-x-0 bottom-0 -z-10 mx-auto w-[130%] max-w-md select-none sm:max-w-xl"
+          className="pointer-events-none absolute inset-x-0 bottom-0 -z-10 mx-auto w-[92%] max-w-[20rem] select-none sm:max-w-[30rem]"
           initial={{ opacity: 0, y: 40 }}
           whileInView={{ opacity: 0.95, y: 0 }}
           viewport={inViewOnce}
           transition={{ duration: 1.3, ease: EASE }}
         />
 
-        <motion.p
-          className="relative mt-16 text-[0.6875rem] tracking-wide text-sky-600/80"
+        <motion.div
+          className="relative mt-14 space-y-1"
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={inViewOnce}
           transition={{ delay: 0.5, duration: 0.9 }}
         >
-          Made with love for a lifetime story
-        </motion.p>
+          {closing.tagline && (
+            <p className="text-[0.6875rem] tracking-wide text-sky-600/80">
+              {closing.tagline}
+            </p>
+          )}
+          {closing.credit && (
+            <p className="text-[0.6875rem] tracking-[0.12em] text-sky-600/70">
+              {closing.credit}
+            </p>
+          )}
+        </motion.div>
       </footer>
 
       <BackToTop />

@@ -33,7 +33,10 @@ export default function HeroSection() {
     <section
       id="home"
       ref={ref}
-      className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden px-5 pt-24 pb-16 text-center"
+      /* `100svh` (small viewport height), bukan `100vh`: di ponsel, `vh`
+         dihitung seolah bilah alamat browser tersembunyi, sehingga section ini
+         jadi lebih tinggi daripada layar yang benar-benar terlihat. */
+      className="relative flex min-h-[100svh] flex-col items-center justify-center overflow-hidden px-5 pt-20 pb-6 text-center"
     >
       {/* --- Latar langit, bergerak paling pelan ---------------------------- */}
       <motion.img
@@ -101,13 +104,17 @@ export default function HeroSection() {
         whileInView={{ opacity: 1, scale: 1 }}
         viewport={inViewOnce}
         transition={{ duration: 1.4, ease: EASE }}
-        className="relative z-0 mt-8 w-[84%] max-w-sm select-none"
+        /* Tinggi foto diikat ke tinggi layar supaya seluruh isi hero muat
+           dalam satu layar. Tanpa batas ini, hero membengkak jadi 1064 px di
+           layar 844 px dan petunjuk "geser ke bawah" terdorong ke bawah
+           lipatan, menyisakan area kosong sebelum section berikutnya. */
+        className="relative z-0 mt-6 max-h-[34svh] w-auto max-w-[84%] object-contain select-none"
       />
 
       {/* --- Petunjuk gulir --------------------------------------------------- */}
       <motion.div
         aria-hidden="true"
-        className="relative z-10 mt-4 flex flex-col items-center gap-2 text-sky-500"
+        className="relative z-10 mt-3 flex flex-col items-center gap-2 text-sky-500"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 2, duration: 1 }}
