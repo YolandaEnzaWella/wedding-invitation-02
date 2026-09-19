@@ -4,11 +4,22 @@ import { loveStory } from '../data/content.js'
 import { EASE, inViewOnce } from '../lib/motion.js'
 import Section from './Section.jsx'
 
-/**
- * Timeline perjalanan pasangan. Garis vertikalnya tidak muncul sekaligus —
- * panjangnya mengikuti sejauh mana tamu sudah menggulir section ini, sehingga
- * terasa seperti cerita yang sedang berjalan.
- */
+/* ---------------------------------------------------------------------------
+   UKURAN JALUR TIMELINE
+   ---------------------------------------------------------------------------
+   Garis vertikal dan titiknya diposisikan absolut, jadi letaknya harus
+   dihitung dari lebar foto — bukan ditebak. Tiga angka di bawah adalah
+   sumbernya; ubah FOTO saja dan sisanya ikut menyesuaikan.
+
+   Foto sengaja berukuran sama di semua lebar layar. Versi sebelumnya membesar
+   di layar lebar (`sm:size-28`) sementara garisnya tetap di tempat, sehingga
+   garis dan titiknya menembus foto.
+   --------------------------------------------------------------------------- */
+const FOTO = 96 // diameter foto bulat, px
+const JARAK = 32 // jarak foto → teks, px
+const GARIS = FOTO + JARAK / 2 // garis tepat di tengah jarak itu
+const TITIK = 10 // diameter titik penanda, px
+
 export default function LoveStorySection() {
   const trackRef = useRef(null)
 
@@ -30,24 +41,26 @@ export default function LoveStorySection() {
         {/* Rel garis: jalur pucat + garis biru yang tumbuh mengikuti scroll. */}
         <span
           aria-hidden="true"
-          className="absolute top-2 bottom-2 left-[2.75rem] w-px bg-sky-100 sm:left-[3.5rem]"
+          className="absolute top-2 bottom-2 w-px bg-sky-100"
+          style={{ left: GARIS }}
         />
         <motion.span
           aria-hidden="true"
-          style={{ scaleY: lineScale, transformOrigin: 'top' }}
-          className="absolute top-2 bottom-2 left-[2.75rem] w-px bg-sky-400 sm:left-[3.5rem]"
+          style={{ left: GARIS, scaleY: lineScale, transformOrigin: 'top' }}
+          className="absolute top-2 bottom-2 w-px bg-sky-400"
         />
 
         <ol className="space-y-9">
-          {loveStory.map((item, i) => (
-            <li key={item.year} className="relative flex items-start gap-4 sm:gap-6">
+          {loveStory.map((item) => (
+            <li key={item.year} className="relative flex items-start">
               {/* --- Foto bulat --------------------------------------------- */}
               <motion.div
                 initial={{ opacity: 0, x: -36, scale: 0.9 }}
                 whileInView={{ opacity: 1, x: 0, scale: 1 }}
                 viewport={inViewOnce}
                 transition={{ duration: 0.7, ease: EASE }}
-                className="relative z-10 size-[5.5rem] shrink-0 overflow-hidden rounded-full border-4 border-white shadow-[var(--shadow-soft)] sm:size-28"
+                style={{ width: FOTO, height: FOTO }}
+                className="relative z-10 shrink-0 overflow-hidden rounded-full border-4 border-white shadow-[var(--shadow-soft)]"
               >
                 <img
                   src={item.photo}
@@ -58,14 +71,20 @@ export default function LoveStorySection() {
                 />
               </motion.div>
 
-              {/* --- Titik pada garis ---------------------------------------- */}
+              {/* --- Titik pada garis, persis di tengah tinggi foto ---------- */}
               <motion.span
                 aria-hidden="true"
                 initial={{ scale: 0 }}
                 whileInView={{ scale: 1 }}
                 viewport={inViewOnce}
                 transition={{ delay: 0.25, duration: 0.45, ease: EASE }}
-                className="absolute top-9 left-[2.4rem] z-20 size-2.5 rounded-full bg-sky-500 ring-4 ring-white sm:left-[3.15rem]"
+                style={{
+                  left: GARIS - TITIK / 2,
+                  top: FOTO / 2 - TITIK / 2,
+                  width: TITIK,
+                  height: TITIK,
+                }}
+                className="absolute z-20 rounded-full bg-sky-500 ring-4 ring-white"
               />
 
               {/* --- Teks ---------------------------------------------------- */}
@@ -74,7 +93,8 @@ export default function LoveStorySection() {
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={inViewOnce}
                 transition={{ delay: 0.12, duration: 0.7, ease: EASE }}
-                className="pt-1.5 pl-2 sm:pl-4"
+                style={{ marginLeft: JARAK }}
+                className="min-w-0 flex-1 pt-1.5"
               >
                 <span className="font-serif text-sm tracking-[0.2em] text-sky-500">
                   {item.year}
@@ -82,9 +102,6 @@ export default function LoveStorySection() {
                 <h3 className="mt-0.5 font-serif text-xl text-sky-900">{item.title}</h3>
                 <p className="mt-1.5 text-sm leading-relaxed text-sky-700">{item.text}</p>
               </motion.div>
-
-              {/* Nomor urut disembunyikan dari tampilan, dibaca pembaca layar. */}
-              <span className="sr-only">Tahap {i + 1}</span>
             </li>
           ))}
         </ol>
