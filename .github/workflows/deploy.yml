@@ -7,9 +7,13 @@
 # yang memuat `/src/main.jsx` — berkas JSX yang tidak bisa dijalankan browser.
 # Hasilnya halaman putih kosong.
 #
-# SEKALI SAJA, di setelan repo: Settings -> Pages -> Source, pilih
-# "GitHub Actions" (bukan "Deploy from a branch"). Tanpa itu, alur kerja ini
-# berjalan sampai selesai tapi hasilnya tidak pernah dipasang.
+# Setelan repo yang dibutuhkan: Settings -> Pages -> Source harus "GitHub
+# Actions" (bukan "Deploy from a branch"). Di repo ini sudah begitu.
+#
+# Alur kerja ini menggantikan `static.yml` bawaan GitHub, yang mengunggah
+# seluruh repo apa adanya (`path: '.'`) tanpa build — persis penyebab halaman
+# putih tadi. Jangan hidupkan lagi keduanya bersamaan: dua alur kerja yang
+# sama-sama menerbitkan ke Pages akan saling menimpa.
 # ---------------------------------------------------------------------------
 
 name: Deploy undangan ke GitHub Pages
@@ -25,10 +29,11 @@ permissions:
   pages: write
   id-token: write
 
-# Kalau ada beberapa push beruntun, biarkan yang terbaru saja yang dipasang.
+# Hanya satu penerbitan berjalan pada satu waktu. Yang sedang berjalan tidak
+# dibatalkan — biarkan tuntas supaya situs tidak sempat setengah terpasang.
 concurrency:
   group: pages
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
   build:
@@ -69,4 +74,4 @@ jobs:
     steps:
       - name: Pasang ke GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v5
